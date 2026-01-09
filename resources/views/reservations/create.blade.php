@@ -145,6 +145,7 @@
                     calendar.removeAllEvents();
                     data.forEach(event => { calendar.addEvent(event); });
                 });
+                
         }
     </script>
 </body>
