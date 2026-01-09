@@ -50,11 +50,6 @@
                 </button>
             </form>
 
-            <div class="mt-6 text-center">
-                <p class="text-sm text-gray-600">Don't have an account? 
-                    <a href="{{ route('register') }}" class="text-iium-green font-bold hover:underline">Register here</a>
-                </p>
-            </div>
         </div>
     </div>
 

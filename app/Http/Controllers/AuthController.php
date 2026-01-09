@@ -9,32 +9,33 @@ use Illuminate\Support\Facades\Hash; // Needed for password hashing
 
 class AuthController extends Controller
 {
-    // Show the register form
     public function showRegister() {
         return view('auth.register');
     }
 
     // Submit register form
     public function register(Request $request) {
+        // 1. Validate Input
         $credentials = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'phone' => 'required|string',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed', // 'confirmed' looks for password_confirmation field
+            'phone'    => 'nullable|string',
+            'role'     => 'required|in:admin,student,staff', // Ensure role is valid
         ]);
 
-        // Create the user
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password), // Always hash passwords!
-            'phone' => $request->phone,
+        // 2. Create the user
+        User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'phone'    => $request->phone,
+            'role'     => $request->role, // Save the role
         ]);
 
-        // Auto login after register
-        Auth::login($user);
-
-        return redirect()->route('dashboard')->with('success', 'Registration successful!');
+        // 3. Redirect back to User Management Dashboard
+        // Do NOT use Auth::login($user) here, or you will be logged out as Admin!
+        return redirect()->route('admin.users.index')->with('success', 'New user registered successfully!');
     }
 
     // Show Login Form
@@ -51,6 +52,16 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            $user = Auth::user();
+
+            // 2. Check their role
+            if ($user->role === 'admin') {
+                // Send Admin to the Admin Dashboard
+                // Make sure your route in web.php is named 'admin.dashboard'
+                return redirect()->intended(route('admin.dashboard'));
+            }
+
             return redirect()->intended('dashboard');
         }
 

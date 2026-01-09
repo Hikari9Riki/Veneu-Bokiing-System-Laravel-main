@@ -17,18 +17,6 @@ class HomepageController extends Controller
         return view('homepage', compact('kulliyyahs'));
     }
 
-    public function getVenues(Request $request)
-    {
-        $query = Venue::query();
-
-        // Filter by the string column 'kuliyyah'
-        if ($request->has('kuliyyah')) {
-            $query->where('kuliyyah', $request->kuliyyah);
-        }
-
-        return response()->json($query->get());
-    }
-
     public function calendar(Request $request)
     {
         $query = Reservation::where('status', 'approved');

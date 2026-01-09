@@ -10,8 +10,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Seed Users (Data from your image)
-        // Password is fixed to '123qweasd' for everyone
+        // ==========================================
+        // 1. Seed Users
+        // ==========================================
         $password = Hash::make('123qweasd');
 
         DB::table('users')->insert([
@@ -22,8 +23,8 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0123456789',
                 'role' => 'user',
                 'password' => $password,
-                'created_at' => '2026-01-07 18:18:55',
-                'updated_at' => '2026-01-07 18:18:55',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'id' => 2,
@@ -32,18 +33,18 @@ class DatabaseSeeder extends Seeder
                 'phone' => '1110',
                 'role' => 'user',
                 'password' => $password,
-                'created_at' => '2026-01-07 22:46:39',
-                'updated_at' => '2026-01-07 22:46:39',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'id' => 3,
-                'name' => 'duwe',
-                'email' => 'duwe@321', // Note: Emails must be unique
+                'name' => 'duwe_alt', // Changed name slightly to distinguish
+                'email' => 'duwe@321',
                 'phone' => '0111',
                 'role' => 'user',
                 'password' => $password,
-                'created_at' => '2026-01-07 23:15:53',
-                'updated_at' => '2026-01-07 23:15:53',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'id' => 4,
@@ -52,13 +53,16 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0123456789',
                 'role' => 'admin',
                 'password' => $password,
-                'created_at' => '2026-01-08 10:04:28',
-                'updated_at' => '2026-01-08 10:04:28',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ]);
 
-        // 2. Seed Venues (Data from your image)
+        // ==========================================
+        // 2. Seed Venues
+        // ==========================================
         DB::table('venues')->insert([
+            // Existing Venues (from your first snippet)
             [
                 'venueID' => 'V001',
                 'name' => 'Main Hall',
@@ -83,34 +87,113 @@ class DatabaseSeeder extends Seeder
                 'capacity' => 120,
                 'available' => 1,
             ],
+
+            // New Venues (from your second snippet) - IDs manually assigned
+            [
+                'venueID' => 'V004',
+                'name' => 'Main Auditorium', 
+                'kuliyyah' => 'KICT', 
+                'location' => 'Level 1, KICT Building',
+                'capacity' => 300, 
+                'available' => 1,
+            ],
+            [
+                'venueID' => 'V005',
+                'name' => 'Conference Room', 
+                'kuliyyah' => 'KICT', 
+                'location' => 'Level 5, KICT',
+                'capacity' => 50, 
+                'available' => 1,
+            ],
+            [
+                'venueID' => 'V006',
+                'name' => 'Al-Khawarizmi Lab', 
+                'kuliyyah' => 'KICT', 
+                'location' => 'Level 2, Block B',
+                'capacity' => 40, 
+                'available' => 1,
+            ],
+            [
+                'venueID' => 'V007',
+                'name' => 'Lecture Hall 1', 
+                'kuliyyah' => 'KENMS', 
+                'location' => 'Ground Floor, KENMS',
+                'capacity' => 200, 
+                'available' => 1,
+            ],
+            [
+                'venueID' => 'V008',
+                'name' => 'Exam Hall', 
+                'kuliyyah' => 'KENMS', 
+                'location' => 'Level 3, KENMS',
+                'capacity' => 150, 
+                'available' => 1,
+            ],
+            [
+                'venueID' => 'V009',
+                'name' => 'Multipurpose Hall', 
+                'kuliyyah' => 'KOE', 
+                'location' => 'Block E1, Engineering',
+                'capacity' => 500, 
+                'available' => 1,
+            ],
+            [
+                'venueID' => 'V010',
+                'name' => 'Meeting Room 2', 
+                'kuliyyah' => 'KOE', 
+                'location' => 'Admin Building, KOE',
+                'capacity' => 20, 
+                'available' => 1,
+            ],
+            [
+                'venueID' => 'V011',
+                'name' => 'Moot Court', 
+                'kuliyyah' => 'AIKOL', 
+                'location' => 'Level 2, AIKOL',
+                'capacity' => 100, 
+                'available' => 1,
+            ],
+            [
+                'venueID' => 'V012',
+                'name' => 'Main Hall', 
+                'kuliyyah' => 'IRKHS', 
+                'location' => 'Level 1, IRKHS',
+                'capacity' => 400, 
+                'available' => 1,
+            ],
         ]);
 
+        // ==========================================
         // 3. Seed Reservations
-        // I have filled in the NULL reasons with generic events as requested.
+        // ==========================================
         DB::table('reservations')->insert([
             [
                 'reservationID' => 'RES-ABC123',
-                'date' => '2026-01-15',
+                // Updated to match new startDate/endDate columns
+                'startDate' => '2026-01-15',
+                'endDate' => '2026-01-15',
                 'startTime' => '10:00:00',
                 'endTime' => '12:00:00',
                 'reason' => 'Weekly Team Meeting',
                 'status' => 'Approved',
                 'venueID' => 'V001',
                 'user_id' => 1,
-                'created_at' => '2026-01-08 12:00:00',
-                'updated_at' => '2026-01-08 12:00:00',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'reservationID' => 'RES-DEF456',
-                'date' => '2026-01-20',
+                // Updated to match new startDate/endDate columns
+                'startDate' => '2026-01-20',
+                'endDate' => '2026-01-20',
                 'startTime' => '14:00:00',
                 'endTime' => '16:00:00',
                 'reason' => 'Project Presentation',
                 'status' => 'Pending',
                 'venueID' => 'V002',
                 'user_id' => 2,
-                'created_at' => '2026-01-08 13:00:00',
-                'updated_at' => '2026-01-08 13:00:00',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ]);
     }

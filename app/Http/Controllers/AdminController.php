@@ -4,39 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Reservation;
-use Carbon\Carbon;
 
 class AdminController extends Controller
 {
     public function index()
     {
         // 1. Fetch only Pending reservations
-        // 2. Eager load 'user' (to see who booked) and 'venue'
-        // 3. Order by the Event Date (Urgency) or Created Date (First Come First Serve)
+        // 2. Eager load 'user' and 'venue'
+        // 3. Order by 'startDate' (Urgency) instead of the old 'date' column
         $pendingReservations = Reservation::where('status', 'Pending')
             ->with(['user', 'venue']) 
-            ->orderBy('date', 'asc') // Shows upcoming events first
+            ->orderBy('startDate', 'asc') // UPDATED: Use 'startDate'
             ->get();
 
         return view('admin.dashboard', compact('pendingReservations'));
     }
 
-    // Logic to update status (Approve/Reject)
+    // You likely also have an updateStatus method here
     public function updateStatus(Request $request, $id)
     {
         $reservation = Reservation::findOrFail($id);
         
-        // Validate request
+        // Validate input (Approved or Rejected)
         $request->validate([
             'status' => 'required|in:Approved,Rejected',
-            'admin_remark' => 'nullable|string'
         ]);
 
-        $reservation->update([
-            'status' => $request->status,
-            // 'admin_remark' => $request->admin_remark // Optional: if you have this column
-        ]);
+        $reservation->status = $request->status;
+        $reservation->save();
 
-        return redirect()->back()->with('success', "Reservation has been {$request->status}");
+        return redirect()->route('admin.dashboard')->with('success', "Reservation has been {$request->status}.");
     }
 }
