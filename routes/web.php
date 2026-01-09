@@ -9,12 +9,10 @@ use Illuminate\Support\Facades\Route;
 
 // Public Routes
 Route::get('/', function () {
-    return redirect()->route('login'); // Redirect to login for now
+    return redirect()->route('login');
 });
 
-Route::get('/venues', [VenueController::class, 'getVenues'])->name('getVenues');
-
-// Guest Routes
+// Guest Routes (Login/Register)
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('showregister');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
@@ -22,20 +20,23 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
 
-// Authenticated Routes
+// Authenticated Routes (Dashboard, Reservations, Profile)
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    // Dashboard (Calendar)
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // User Profile (New)
+    // Profile Routes
     Route::get('/profile', [UserController::class, 'showProfile'])->name('profile.show');
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
 
-    // Reservations
-    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index'); // The "My Reservations" Page
-    Route::get('/reservations/data', [ReservationController::class, 'getReservations'])->name('reservations.getreservations'); // The JSON data for Calendar
-    Route::get('/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
-    Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+    // Reservation Routes
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index'); // List View
+    Route::get('/reservations/data', [ReservationController::class, 'getReservations'])->name('reservations.getreservations'); // Calendar Data API
+    Route::get('/reservations/create', [ReservationController::class, 'create'])->name('reservations.create'); // Create Form
+    Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store'); // Store Action
+    
+    // API Route for Venues (used in dropdowns)
+    Route::get('/venues', [VenueController::class, 'getVenues'])->name('getVenues');
 });

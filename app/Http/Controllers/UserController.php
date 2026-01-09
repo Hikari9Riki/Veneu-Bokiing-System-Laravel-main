@@ -9,23 +9,20 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    // Show the Profile View
     public function showProfile()
     {
         $user = Auth::user();
         return view('user.profile', compact('user'));
     }
 
-    // Update User Information
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
 
         $request->validate([
-            'name'  => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
-            // Optional: Add Matric No validation if you added that column to DB
             'password' => 'nullable|min:8|confirmed',
         ]);
 
@@ -33,7 +30,6 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->phone = $request->phone;
 
-        // Only update password if user entered a new one
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
