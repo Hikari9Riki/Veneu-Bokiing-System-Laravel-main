@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<h1>Kambing</h1>
 <div class="container-fluid mt-4">
     <div class="row">
         <!-- Calendar Section (2/3) -->
