@@ -3,24 +3,44 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Reservation;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserController extends Controller
 {
-    public function updateStatus(Request $request, $id)
+    // Show the Profile View
+    public function showProfile()
     {
-        $reservation = Reservation::findOrFail($id);
-        
-        // Validate request
+        $user = Auth::user();
+        return view('user.profile', compact('user'));
+    }
+
+    // Update User Information
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
         $request->validate([
-            'status' => 'required|in:Cancelled',
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            // Optional: Add Matric No validation if you added that column to DB
+            'password' => 'nullable|min:8|confirmed',
         ]);
 
-        $reservation->update([
-            'status' => $request->status,
-            // 'admin_remark' => $request->admin_remark // Optional: if you have this column
-        ]);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
 
-        return redirect()->back()->with('success', "Reservation has been {$request->status}");
+        // Only update password if user entered a new one
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        /** @var \App\Models\User $user */
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully!');
     }
 }
